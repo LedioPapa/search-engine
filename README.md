@@ -24,8 +24,8 @@ There are 2 steps to run the application:
 docker run -d -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.17.3
 ```
 
-- Start the application
+- Go to the target folder where the jar file is located an start the application using the command below
 
 ```
-java - jar search-engine-1.0-SNAPSHOT-jar-with-dependencies.jar
+java -jar search-engine-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
