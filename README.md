@@ -1,4 +1,7 @@
 # Console Search engine with ElasticSearch
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1ece3773cc0941e59c0ad891695b7439)](https://app.codacy.com/gh/LedioPapa/search-engine?utm_source=github.com&utm_medium=referral&utm_content=LedioPapa/search-engine&utm_campaign=Badge_Grade_Settings)
+
 This is a simple search engine which can add documents to an index and query by their contents.
 
 It uses ElasticSearch's library to make possible all the operations in the server node. 
