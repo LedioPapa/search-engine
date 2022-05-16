@@ -2,9 +2,9 @@ FROM maven:alpine as build
 ENV HOME=/search-engine
 RUN mkdir -p $HOME
 WORKDIR $HOME
-ADD pom.xml $HOME
+COPY pom.xml $HOME
 RUN mvn verify --fail-never
-ADD . $HOME
+COPY . $HOME
 RUN mvn package
 
 FROM openjdk:8-jdk-alpine
