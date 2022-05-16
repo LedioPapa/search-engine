@@ -32,6 +32,7 @@ public class HelpCommand implements Command{
                     break;
                 default:
                     PrintUtil.printCommands();
+                    break;
             }
         } else {
             System.out.println("No valid argument found! Printing Available Commands.");

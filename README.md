@@ -12,21 +12,24 @@ Apache Maven 3+
 
 Docker
 
-## Compile the Application
-Using a terminal go to the root folder where the file pom.xml is an run the following command:
-```
-mvn clean package
-```
+Docker Compose
+
 ## Running the Application
-There are 2 steps to run the application:
-- Start an ElasticSearch node locally with Docker using the command below
+Navigate to the root folder of the project and run the following commands:
+- Start a cluster of three ElasticSearch nodes with Docker Compose
 
 ```
-docker run -d -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.17.3
+docker-compose up -d
 ```
 
-- Go to the target folder where the jar file is located an start the application using the command below
+- Create the application image using Docker Build
 
 ```
-java -jar search-engine-1.0-SNAPSHOT-jar-with-dependencies.jar
+docker build -t search-engine-app .
+```
+
+- Start the application using Docker Run
+
+```
+docker run --rm -it --network search-engine_elastic search-engine-app
 ```

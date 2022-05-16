@@ -21,7 +21,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * Contains logic to add documents to indexes
+ * Contains logic to add documents to index
  * in an ElasticSearch node
  */
 public class ElasticSearchEngine {
@@ -29,7 +29,8 @@ public class ElasticSearchEngine {
     private final ElasticsearchClient client;
 
     private ElasticSearchEngine() {
-        RestClient restClient = RestClient.builder(new HttpHost("localhost", 9200)).build();
+        RestClient restClient = RestClient.builder(new HttpHost(System.getenv("ELASTIC_HOSTNAME"),
+                Integer.parseInt(System.getenv("ELASTIC_PORT")))).build();
         ElasticsearchTransport transport = new RestClientTransport(restClient, new JacksonJsonpMapper());
         client = new ElasticsearchClient(transport);
     }

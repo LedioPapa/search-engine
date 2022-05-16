@@ -19,7 +19,7 @@ public class CommandResolverTest {
 
     @Test
     public void resolveUnknownCommand() {
-        Command command = resolver.resolve("testd");
+        Command command = resolver.resolve("test");
         assertNull(command);
     }
 
