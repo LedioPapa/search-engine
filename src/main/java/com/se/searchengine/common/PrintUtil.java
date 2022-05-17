@@ -1,4 +1,4 @@
-package com.se.common;
+package com.se.searchengine.common;
 
 import java.util.List;
 
@@ -57,8 +57,8 @@ public class PrintUtil {
                 "Interrupt everything and stop the Application.");
     }
 
-    public static void indexOk(CommandType commandType, long duration) {
-        System.out.printf("%s ok Operation lasted %s ms\n",commandType.getCommand(), duration);
+    public static void indexOk(long duration) {
+        System.out.printf("index ok Operation lasted %s ms\n", duration);
     }
 
     public static void queryResult(List<Long> result, long duration) {

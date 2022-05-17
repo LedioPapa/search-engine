@@ -1,9 +1,6 @@
-package com.se.model;
+package com.se.searchengine.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,6 +8,8 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
+@org.springframework.data.elasticsearch.annotations.Document(indexName = "documents")
 public class Document {
     private Long id;
     private List<String> tokens;

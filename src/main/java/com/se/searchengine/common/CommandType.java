@@ -1,4 +1,4 @@
-package com.se.common;
+package com.se.searchengine.common;
 
 public enum CommandType {
     HELP("help"),INDEX("index"), QUERY("query"), QUIT("quit");

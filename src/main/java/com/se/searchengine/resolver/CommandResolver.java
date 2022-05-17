@@ -1,12 +1,12 @@
-package com.se.resolver;
+package com.se.searchengine.resolver;
 
-import com.se.command.HelpCommand;
-import com.se.command.IndexCommand;
-import com.se.command.QueryCommand;
-import com.se.common.CommandType;
-import com.se.common.PrintUtil;
-import com.se.command.Command;
+import com.se.searchengine.common.CommandType;
+import com.se.searchengine.common.PrintUtil;
+import com.se.searchengine.service.SearchService;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +18,11 @@ import java.util.stream.Stream;
  * Contains logic to resolve user input
  * from String to a Command
  */
+@Component
+@NoArgsConstructor
 public class CommandResolver {
+
+    private SearchService searchService;
 
     /**
      * Resolves the command type and calls the
@@ -26,7 +30,7 @@ public class CommandResolver {
      * @param input
      * @return Command or null
      */
-    public Command resolve(String input) {
+    public void resolve(String input) {
         List<String> commandParts = Stream.of(input.trim().split(" "))
                 .filter(StringUtils::isNoneBlank)
                 .collect(Collectors.toList());
@@ -38,13 +42,16 @@ public class CommandResolver {
             if (command.isPresent()) {
                 switch (command.get()) {
                     case HELP:
-                        return resolveHelp(commandParts);
+                        resolveHelp(commandParts);
+                        break;
                     case QUIT:
                         System.exit(0);
                     case INDEX:
-                        return resolveIndex(commandParts);
+                        resolveIndex(commandParts);
+                        break;
                     case QUERY:
-                        return resolveQuery(commandParts);
+                        resolveQuery(commandParts);
+                        break;
                     default:
                         break;
                 }
@@ -52,7 +59,6 @@ public class CommandResolver {
                 PrintUtil.unknownCommand(commandHead);
             }
         }
-        return null;
     }
 
     /**
@@ -60,25 +66,31 @@ public class CommandResolver {
      * @param commandParts
      * @return HelpCommand
      */
-    private Command resolveHelp(List<String> commandParts) {
+    private void resolveHelp(List<String> commandParts) {
         if (commandParts.size() == 1) {
-            return new HelpCommand(null);
+            searchService.help(null);
+            return;
         } else {
             Optional<CommandType> command = Stream.of(CommandType.values())
                     .filter(commandType -> commandType.getCommand().equals(commandParts.get(1)))
                     .findFirst();
             if (!command.isPresent()) {
-                return new HelpCommand(null);
+                searchService.help(null);
+                return;
             }
             switch (command.get()) {
                 case INDEX:
-                    return new HelpCommand(CommandType.INDEX);
+                    searchService.help(CommandType.INDEX);
+                    break;
                 case QUERY:
-                    return new HelpCommand(CommandType.QUERY);
+                    searchService.help(CommandType.QUERY);
+                    break;
                 case QUIT:
-                    return new HelpCommand(CommandType.QUIT);
+                    searchService.help(CommandType.QUIT);
+                    break;
                 default:
-                    return new HelpCommand(null);
+                    searchService.help(null);
+                    break;
             }
         }
     }
@@ -88,14 +100,14 @@ public class CommandResolver {
      * @param commandParts
      * @return IndexCommand or null
      */
-    private Command resolveIndex(List<String> commandParts) {
+    private void resolveIndex(List<String> commandParts) {
         if (commandParts.size() < 3) {
             PrintUtil.commandError(CommandType.INDEX.getCommand(), "arguments mismatch! required arguments: <doc_id> and at least one <token>");
-            return null;
+            return;
         }
         if (!Pattern.matches("[0-9]+", commandParts.get(1))) {
             PrintUtil.commandError(CommandType.INDEX.getCommand(), String.format("unsupported argument %s! <document id> must be a number", commandParts.get(1)));
-            return null;
+            return;
         }
         Optional<String> unsupportedTokenFormat = commandParts
                 .stream()
@@ -104,10 +116,10 @@ public class CommandResolver {
                 .findFirst();
         if (unsupportedTokenFormat.isPresent()) {
             PrintUtil.commandError(CommandType.INDEX.getCommand(), String.format("unsupported argument %s! All <token> must be of alphanumeric value", unsupportedTokenFormat.get()));
-            return null;
+            return;
         }
 
-        return new IndexCommand(commandParts);
+        searchService.index(commandParts);
     }
 
     /**
@@ -115,19 +127,24 @@ public class CommandResolver {
      * @param commandParts
      * @return QueryCommand or null
      */
-    private Command resolveQuery(List<String> commandParts) {
+    private void resolveQuery(List<String> commandParts) {
         if (commandParts.size() < 2) {
             PrintUtil.commandError(CommandType.QUERY.getCommand(), "argument <expression> missing. See 'help query' for more details.");
-            return null;
+            return;
         }
         String expression = String.join(" ", commandParts.subList(1, commandParts.size()))
                 .replace("&", " AND ")
                 .replace("|", " OR ");
         if (!Pattern.matches("[a-zA-Z0-9()\\s*]*", expression)) {
             PrintUtil.commandError(CommandType.QUERY.getCommand(), "unsupported characters found in <expression>. Allowed characters are: alphanumeric and special characters & | ()");
-            return null;
+            return;
         }
 
-        return new QueryCommand(expression);
+        searchService.query(expression);
+    }
+
+    @Autowired
+    public void setSearchService(SearchService searchService) {
+        this.searchService = searchService;
     }
 }
