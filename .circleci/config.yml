@@ -5,9 +5,9 @@ jobs:
     parallelism: 2
     docker:
       - image: cimg/openjdk:17.0.1
-        auth:
-          username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+#        auth:
+#          username: mydockerhub-user
+#          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
       - checkout
       - restore_cache:
