@@ -3,7 +3,7 @@
 ## Architecture
 This is a simple search engine which can add documents to an index and query by their contents.
 
-![](/home/papa/projects/mine/architecture-diagram-1.png)
+![Architecture Diagram](src/main/resources/architecture-diagram-1.png)
 
 The architecture of the entire solution consists of 2 main parts:
 - An Elasticsearch cluster of 3 nodes connected to a load balancer
