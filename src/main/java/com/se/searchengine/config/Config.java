@@ -17,7 +17,7 @@ public class Config {
     public RestHighLevelClient client() {
         ClientConfiguration clientConfiguration
                 = ClientConfiguration.builder()
-                .connectedTo(System.getenv("ELASTIC_HOST_PORT"))
+                .connectedTo(System.getenv("ES_LB"))
                 .build();
 
         return RestClients.create(clientConfiguration).rest();

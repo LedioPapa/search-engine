@@ -1,6 +1,28 @@
 version: '2.2'
 services:
+  gateway:
+    image: traefik:v2.2
+    hostname: load-balancer
+#    network_mode: "host"
+    command:
+      - --api.insecure=true
+      - --providers.docker=true
+      - --providers.docker.exposedByDefault=false
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - elastic
   es01:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.elasticsearch.entrypoints=http"
+      - "traefik.http.routers.elasticsearch.rule=Host(`localhost`) && PathPrefix(`/es`) || Host(`elasticsearch`)"
+      - "traefik.http.routers.elasticsearch.middlewares=es-stripprefix"
+      - "traefik.http.middlewares.es-stripprefix.stripprefix.prefixes=/es"
+      - "traefik.http.services.elasticsearch.loadbalancer.server.port=9200"
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.3
     container_name: es01
     environment:
@@ -17,10 +39,17 @@ services:
     volumes:
       - data01:/usr/share/elasticsearch/data
     ports:
-      - 9200:9200
+      - "9200:9200"
     networks:
       - elastic
   es02:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.elasticsearch.entrypoints=http"
+      - "traefik.http.routers.elasticsearch.rule=Host(`localhost`) && PathPrefix(`/es`) || Host(`elasticsearch`)"
+      - "traefik.http.routers.elasticsearch.middlewares=es-stripprefix"
+      - "traefik.http.middlewares.es-stripprefix.stripprefix.prefixes=/es"
+      - "traefik.http.services.elasticsearch.loadbalancer.server.port=9200"
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.3
     container_name: es02
     environment:
@@ -36,9 +65,18 @@ services:
         hard: -1
     volumes:
       - data02:/usr/share/elasticsearch/data
+    ports:
+      - "9201:9200"
     networks:
       - elastic
   es03:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.elasticsearch.entrypoints=http"
+      - "traefik.http.routers.elasticsearch.rule=Host(`localhost`) && PathPrefix(`/es`) || Host(`elasticsearch`)"
+      - "traefik.http.routers.elasticsearch.middlewares=es-stripprefix"
+      - "traefik.http.middlewares.es-stripprefix.stripprefix.prefixes=/es"
+      - "traefik.http.services.elasticsearch.loadbalancer.server.port=9200"
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.3
     container_name: es03
     environment:
@@ -54,6 +92,8 @@ services:
         hard: -1
     volumes:
       - data03:/usr/share/elasticsearch/data
+    ports:
+      - "9202:9200"
     networks:
       - elastic
 
