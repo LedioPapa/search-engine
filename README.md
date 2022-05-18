@@ -1,4 +1,5 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/e74fee0edb914eb5ba999080adba97bf)](https://www.codacy.com/gh/LedioPapa/search-engine/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=LedioPapa/search-engine&amp;utm_campaign=Badge_Grade)
+[![CircleCI](https://circleci.com/gh/LedioPapa/search-engine/tree/main.svg?style=svg)](https://circleci.com/gh/LedioPapa/search-engine/tree/main)
 # Console Search engine with ElasticSearch
 ## Architecture
 This is a simple search engine which can add documents to an index and query by their contents.
