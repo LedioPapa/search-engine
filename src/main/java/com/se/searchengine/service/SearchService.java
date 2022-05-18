@@ -15,8 +15,13 @@ import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+/**
+ * Performs the business logic after commands are resolved
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -46,14 +51,14 @@ public class SearchService {
                     break;
             }
         } else {
-            System.out.println("No valid argument found! Printing Available Commands.");
+            System.out.println(ResourceBundle.getBundle("messages", Locale.US).getString("helpMissingArg"));
             PrintUtil.printCommands();
         }
     }
 
     /**
      * Creates the document from the resolved input
-     * and call the {@link SearchService} to add the document to the index
+     * and call the {@link DocumentRepository} to add the document to the index
      */
     public void index(List<String> commandParts) {
         try {
@@ -72,7 +77,7 @@ public class SearchService {
 
     /**
      * Calls {@link DocumentRepository} passing the resolved
-     * expression
+     * expression and prints the result
      */
     public void query(String expression) {
         try {

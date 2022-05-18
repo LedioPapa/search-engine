@@ -9,14 +9,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.text.MessageFormat.format;
+import static java.util.ResourceBundle.getBundle;
+
 /**
- * Contains logic to resolve user input
- * from String to a Command
+ * Contains logic to validate and resolve user input
+ * to call the appropriate service method
  */
 @Component
 @NoArgsConstructor
@@ -28,7 +32,6 @@ public class CommandResolver {
      * Resolves the command type and calls the
      * respective resolver methods
      * @param input
-     * @return Command or null
      */
     public void resolve(String input) {
         List<String> commandParts = Stream.of(input.trim().split(" "))
@@ -63,8 +66,8 @@ public class CommandResolver {
 
     /**
      * Contains logic to resolve what help is required
+     * and calls the service
      * @param commandParts
-     * @return HelpCommand
      */
     private void resolveHelp(List<String> commandParts) {
         if (commandParts.size() == 1) {
@@ -96,17 +99,17 @@ public class CommandResolver {
     }
 
     /**
-     * Resolves and validates the index command input
+     * Validates and resolves the index command input
+     * and calls the service
      * @param commandParts
-     * @return IndexCommand or null
      */
     private void resolveIndex(List<String> commandParts) {
         if (commandParts.size() < 3) {
-            PrintUtil.commandError(CommandType.INDEX.getCommand(), "arguments mismatch! required arguments: <doc_id> and at least one <token>");
+            PrintUtil.commandError(CommandType.INDEX.getCommand(), getBundle("messages", Locale.US).getString("indexArgMismatch"));
             return;
         }
         if (!Pattern.matches("[0-9]+", commandParts.get(1))) {
-            PrintUtil.commandError(CommandType.INDEX.getCommand(), String.format("unsupported argument %s! <document id> must be a number", commandParts.get(1)));
+            PrintUtil.commandError(CommandType.INDEX.getCommand(), format(getBundle("messages", Locale.US).getString("indexUnsupportedArgDocId"), commandParts.get(1)));
             return;
         }
         Optional<String> unsupportedTokenFormat = commandParts
@@ -115,7 +118,7 @@ public class CommandResolver {
                 .filter(arg -> !Pattern.matches("[a-zA-Z0-9]*", arg))
                 .findFirst();
         if (unsupportedTokenFormat.isPresent()) {
-            PrintUtil.commandError(CommandType.INDEX.getCommand(), String.format("unsupported argument %s! All <token> must be of alphanumeric value", unsupportedTokenFormat.get()));
+            PrintUtil.commandError(CommandType.INDEX.getCommand(), format(getBundle("messages", Locale.US).getString("indexUnsupportedArgToken"), unsupportedTokenFormat.get()));
             return;
         }
 
@@ -123,20 +126,20 @@ public class CommandResolver {
     }
 
     /**
-     * Resolves and validates the query command input
+     * Validates and resolves the query command input
+     * and calls the service
      * @param commandParts
-     * @return QueryCommand or null
      */
     private void resolveQuery(List<String> commandParts) {
         if (commandParts.size() < 2) {
-            PrintUtil.commandError(CommandType.QUERY.getCommand(), "argument <expression> missing. See 'help query' for more details.");
+            PrintUtil.commandError(CommandType.QUERY.getCommand(), getBundle("messages",Locale.US).getString("queryArgMissing"));
             return;
         }
         String expression = String.join(" ", commandParts.subList(1, commandParts.size()))
                 .replace("&", " AND ")
                 .replace("|", " OR ");
         if (!Pattern.matches("[a-zA-Z0-9()\\s*]*", expression)) {
-            PrintUtil.commandError(CommandType.QUERY.getCommand(), "unsupported characters found in <expression>. Allowed characters are: alphanumeric and special characters & | ()");
+            PrintUtil.commandError(CommandType.QUERY.getCommand(), getBundle("messages",Locale.US).getString("queryUnsupportedChars"));
             return;
         }
 

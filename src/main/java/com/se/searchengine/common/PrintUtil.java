@@ -1,76 +1,80 @@
 package com.se.searchengine.common;
 
 import java.util.List;
+import java.util.Locale;
+
+import static java.text.MessageFormat.format;
+import static java.util.ResourceBundle.getBundle;
 
 /**
  * Util to print different messages to stdout
  */
 public class PrintUtil {
-    public static void printIntro() {
-        System.out.println("Search Engine Concept");
-    }
+
+    /**
+     * print command list
+     */
     public static void printCommands() {
-        System.out.println("Commands:\n" +
-                "\t$ help [command_name]\n" +
-                "\t$ index <doc_id> <token1> <token2> ... <tokenN>\n" +
-                "\t$ query <expression>\n" +
-                "\t$ quit");
+        System.out.println(getBundle("messages", Locale.US).getString("commands"));
     }
 
+    /**
+     * print helpful information about index command
+     */
     public static void indexHelp() {
-        System.out.println("USAGE:\n" +
-                "index <doc_id> <token1> <token2> ... <tokenN>\n" +
-                "\n" +
-                "Adds a document to the index.\n" +
-                "\n" +
-                "<doc-id> is an integer.\n" +
-                "<token> are non unique alphanumeric strings.\n" +
-                "<doc_id> and at least one <token> are required.\n" +
-                "If <doc_id> is already used, it will be replaced.\n" +
-                "\n" +
-                "Examples:\n" +
-                "index 1 soup tomato cream salt\n" +
-                "index 2 cake sugar eggs flour sugar cocoa cream butter\n" +
-                "index 1 bread butter salt\n" +
-                "index 3 soup fish potato salt pepper");
+        System.out.println(getBundle("messages", Locale.US).getString("helpIndex"));
     }
 
+    /**
+     * print helpful information about query command
+     */
     public static void queryHelp() {
-        System.out.println("USAGE:\n" +
-                "query <expression>\n" +
-                "\n" +
-                "Returnd a list of the documents that contain the requested data from <expression>\n" +
-                "\n" +
-                "<expression> is an arbitrary expression composed of alphanumeric tokens and the special symbols &, |, (, and ).\n" +
-                "\n" +
-                "Examples:\n" +
-                "query butter\n" +
-                "query sugar\n" +
-                "query soup\n" +
-                "query (butter | potato) & salt");
+        System.out.println(getBundle("messages", Locale.US).getString("queryHelp"));
     }
 
+    /**
+     * print helpful information about quit command
+     */
     public static void quitHelp() {
-        System.out.println("USAGE:\n" +
-                "quit\n" +
-                "\n" +
-                "Interrupt everything and stop the Application.");
+        System.out.println(getBundle("messages", Locale.US).getString("quitHelp"));
     }
 
+    /**
+     * print message indicating document was added successfully to the index
+     * @param duration
+     */
     public static void indexOk(long duration) {
-        System.out.printf("index ok Operation lasted %s ms\n", duration);
+        System.out.println(format(getBundle("messages", Locale.US).getString("indexOk"), duration));
     }
 
+    /**
+     * print results from querying the application
+     * @param result
+     * @param duration
+     */
     public static void queryResult(List<Long> result, long duration) {
-        System.out.printf("query results %s\nOperation lasted %s ms\n", result.toString(), duration);
+        System.out.println(format(getBundle("messages", Locale.US).getString("queryResult"),
+                result.toString()
+                        .replace("[","")
+                        .replace("]","")
+                        .replace(",",""), duration));
     }
 
+    /**
+     * print message telling an unknown command was given
+     * @param command
+     */
     public static void unknownCommand(String command) {
-        System.out.printf("Unknown command %s%nUse command 'help' to view a list of available commands!%n", command);
+        System.out.println(format(getBundle("messages", Locale.US).getString("unknownCommand"), command));
     }
 
+    /**
+     * print message telling there was an error running a command
+     * @param command
+     * @param message
+     */
     public static void commandError(String command, String message) {
-        System.out.printf("%s error %s%n", command, message);
+        System.out.println(format(getBundle("messages", Locale.US).getString("commandError"), command, message));
     }
 
 }
