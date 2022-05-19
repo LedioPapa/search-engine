@@ -22,25 +22,25 @@ Components of the cluster are listed below:
 
 The Spring Boot application is also dockerized and uses the same network as the cluster in order do be able to discover the nodes.
 Below is mentioned the flow of the application:
--  Initialize Beans and connection to the cluster
--  Read input command through the application console
-  -  help command added to give more information on how to run the commands
--  Input command is validated and resolved
--  After resolving the appropriate service is called
--  Available services are:
-  -  help  -> to print available commands or usages of each
-  -  index -> uses elasticsearch repository to add a document to the index
-  -  query -> uses elasticsearch repository to get the document ids which match the query expression
-  -  quit  -> close the application
--  Print messages to the console using String Localization 
+- Initialize Beans and connection to the cluster
+- Read input command through the application console
+- help command added to give more information on how to run the commands
+- Input command is validated and resolved
+- After resolving the appropriate service is called
+- Available services are:
+  - help  -> to print available commands or usages of each
+  - index -> uses elasticsearch repository to add a document to the index
+  - query -> uses elasticsearch repository to get the document ids which match the query expression
+  - quit  -> close the application
+- Print messages to the console using String Localization 
 
 ###Next steps  
 This implementation was chosen in order to make way for future iterations of the solution with scalability in mind.
 A future iteration to split the Spring Boot application into 2 main parts
--  Web application which exposes different REST endpoints for the services mentioned above and handles the business logic
-  -  This way it would be possible to scale horizontally to handle bigger loads
-  -  It would also make possible to create different client applications (Commandline application, Front-end application etc)
--  Different client applications which query the Web Application Endpoints 
+- Web application which exposes different REST endpoints for the services mentioned above and handles the business logic
+  - This way it would be possible to scale horizontally to handle bigger loads
+  - It would also make possible to create different client applications (Commandline application, Front-end application etc)
+- Different client applications which query the Web Application Endpoints 
 
 ## Requirements
 JDK 8+
