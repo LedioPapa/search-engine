@@ -52,8 +52,6 @@ jobs:
           root: ./
           paths:
             - target/
-      - codecov/upload:
-          file: target/site/jacoco/index.html
 
 workflows:
   version: 2
